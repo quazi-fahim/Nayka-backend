@@ -4,9 +4,22 @@ const app=express();
 const connect=require("./config/db")
 const cors = require("cors");
 const userRouter=require("./Controller/User.routes");
-app.use(cors({
-    origin: process.env.FRONTEND_URL
-}))
+
+const allowedOrigins = [
+    process.env.FRONTEND_URL_LOCAL,  // Local development URL
+    process.env.FRONTEND_URL   // Production URL
+  ];
+
+
+  app.use(cors({
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or Postman)
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    }
+  }));
 
 
 app.use(express.json());
