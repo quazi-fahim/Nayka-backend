@@ -10,18 +10,18 @@ const allowedOrigins = [
     process.env.FRONTEND_URL   // Production URL
   ];
 
-
   app.use(cors({
     origin: (origin, callback) => {
+      console.log("Request Origin: ", origin); // Debugging line
       if (!origin || allowedOrigins.includes(origin)) {
         return callback(null, true);
       }
       return callback(new Error('Not allowed by CORS'));
     },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
-    credentials: true, // Allow credentials (cookies, etc.)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Specific methods
+    credentials: true,  // Allow cookies or other credentials
   }));
-
+  
 
 app.use(express.json());
 app.use("/users",userRouter);
