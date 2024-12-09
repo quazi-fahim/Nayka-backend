@@ -20,7 +20,7 @@ router.get("/", auth,checkAccess(["Admin"]), async (req, res) => {
 });
 
 // Register
-router.post("/register", async (req, res) => {
+router.post("/users/register", async (req, res) => {
   try {
     const { name,email, password, role } = req.body;
     const hash = await bcrypt.hash(password, 10);
@@ -33,7 +33,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Login
-router.post("/login", async (req, res) => {
+router.post("/users/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({email});
