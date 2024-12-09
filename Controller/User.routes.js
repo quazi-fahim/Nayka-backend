@@ -3,7 +3,8 @@ const express = require("express");
 const User = require("../Models/user.schema");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const bcrypt = require('bcryptjs');
+
 const auth = require("../Middleware/auth");
 const checkAccess = require("../Middleware/Checkacess");
 const blacklist = require("../blacklist");
