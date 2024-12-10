@@ -9,7 +9,7 @@ const userRouter=require("./Controller/User.routes");
 
 
 app.use(cors({
-    origin: process.env.FRONTEND_URL_LOCAL,
+    origin: process.env.FRONTEND_URL,
 }))
 
 
