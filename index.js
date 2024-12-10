@@ -5,12 +5,22 @@ const connect=require("./config/db")
 const cors = require("cors");
 const userRouter=require("./Controller/User.routes");
 
-
-
-
-app.use(cors({
-    origin: process.env.FRONTEND_URL,
-}))
+const allowedOrigins = [
+    "http://localhost:5173",
+    "https://naykaclone-frontend2-l1cwkazwa-quazi-fahims-projects.vercel.app",
+  ];
+  
+  app.use(cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // Allows cookies/auth headers to be sent
+  }));
+  
 
 
 app.use(express.json());
