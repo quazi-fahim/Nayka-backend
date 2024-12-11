@@ -6,36 +6,33 @@ const checkAccess=require("../Middleware/Checkacess");
 const Roles=require("../config/roles");
 const Category=require("../Models/category");
 const Brand=require("../Models/brand")
-
+const SearchFeatures = require("../utils/utils");
 //get all product for all 
-router.get("/",async(req,res)=>{
-    try{
-        const resultPerPage = 12;
-        const productsCount = await Product.countDocuments();
-        // console.log(req.query);
-    
-        const searchFeature = new SearchFeatures(Product.find(), req.query)
-            .search()
-            .filter();
-    
-        let products = await searchFeature.query;
-        let filteredProductsCount = products.length;
-    
-        searchFeature.pagination(resultPerPage);
-    
-        products = await searchFeature.query.clone();
-    
-        res.status(200).json({
-            success: true,
-            products,
-            productsCount,
-            resultPerPage,
-            filteredProductsCount,
-        });
-    }
-    catch(error){
-        res.status(500).json({ message: error.message })
-    }
+router.get("/", async (req, res) => {
+  try {
+    const resultPerPage = 12;
+    const productsCount = await Product.countDocuments();
+
+    const searchFeature = new SearchFeatures(Product.find(), req.query)
+      .search()
+      .filter();
+
+    let products = await searchFeature.query;
+    let filteredProductsCount = products.length;
+
+    searchFeature.pagination(resultPerPage);
+    products = await searchFeature.query.clone();
+
+    res.status(200).json({
+      success: true,
+      products,
+      productsCount,
+      resultPerPage,
+      filteredProductsCount,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 //get product details
@@ -61,7 +58,7 @@ router.get("/:id",async(req,res)=>{
 
 ///create product 
 
-router.post("/create",auth,checkAccess(Roles.Admin||Roles.Seller),async(req,res)=>{
+router.post("/create",async(req,res)=>{
     try{
         const { name, category, brand, price, rating, image, description, howtouse } = req.body;
         const categoryExists = await Category.findById(category);
@@ -148,3 +145,5 @@ router.patch("/update/:id", auth, checkAccess(Roles.Admin || Roles.Seller), asyn
     }
   });
   
+
+  module.exports=router
