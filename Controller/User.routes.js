@@ -21,6 +21,7 @@ router.get("/", auth,checkAccess(["Admin"]), async (req, res) => {
 
 // Register
 router.post("/register", async (req, res) => {
+  console.log("Register endpoint hit");
   try {
     const { name,email, password, role } = req.body;
     const hash = await bcrypt.hash(password, 10);
@@ -34,6 +35,7 @@ router.post("/register", async (req, res) => {
 
 // Login
 router.post("/signin", async (req, res) => {
+  console.log("Register endpoint hit");
   try {
     const { email, password } = req.body;
     const user = await User.findOne({email});
@@ -71,34 +73,38 @@ router.post("/signin", async (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  const token = req.headers["authorization"].split(" ")[1];
-  blacklist.push(token)
-  res.send("Logged out successfully")
-})
+  const authHeader = req.headers["authorization"];
+  if (!authHeader) return res.status(401).json({ message: "Authorization header missing!" });
+
+  const token = authHeader.split(" ")[1];
+  if (!token) return res.status(401).json({ message: "Token missing!" });
+
+  blacklist.push(token);
+  res.status(200).json({ message: "Logged out successfully" });
+});
 
 router.post("/token", (req, res) => {
-  const refreshToken = req.body.token;
+  const { token: refreshToken } = req.body;
 
   if (!refreshToken) {
-    return res.status(404).send("Not a valid token!")
+    return res.status(400).json({ message: "Refresh token missing!" });
   }
 
   jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY, (err, decoded) => {
     if (err) {
-      return res.status(404).send("Not a valid token!")
-    } else {
-      const accessToken = jwt.sign(
-        {
-          _id: decoded._id,
-          role: decoded.role,
-        },
-        process.env.SECRET_KEY,
-        { expiresIn: "1h" }
-      );
-      res.json({ accessToken })
+      return res.status(403).json({ message: "Invalid refresh token!" });
     }
-  })
-})
+    const accessToken = jwt.sign(
+      {
+        _id: decoded._id,
+        role: decoded.role,
+      },
+      process.env.SECRET_KEY,
+      { expiresIn: "1h" }
+    );
+    res.status(200).json({ accessToken });
+  });
+});
 
 
 

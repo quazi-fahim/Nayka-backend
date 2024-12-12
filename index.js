@@ -10,11 +10,12 @@ const Cart=require("./Controller/Cart.routes")
 const Category=require("./Controller/Category");
 require("dotenv").config();
 app.use(cors({
-    origin: process.env.FRONTEND_URL_LOCAL,
+    origin: "*",
 }))
 
 
 app.use(express.json());
+app.use(logger);
 app.use("/users",userRouter);
 app.use("/products",ProductRouter);
 app.use("/cart",Cart)
