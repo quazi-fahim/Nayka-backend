@@ -43,6 +43,18 @@ router.get("/all", async (_, res) => {
   }
 })
 
+//search 
+router.get('/search', async (req, res) => {
+  try {
+    const search = req.query.search || "";
+    const products = await Product.find({ name: { $regex: search, $options: "i" } });
+    res.json(products);
+  } catch (err) {
+    console.error("Error fetching products:", err);
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
+});
+
 //get product details
 
 router.get("/:id",async(req,res)=>{
