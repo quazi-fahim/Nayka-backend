@@ -10,7 +10,9 @@ const SearchFeatures = require("../utils/utils");
 //get all product for all 
 router.get("/", async (req, res) => {
   try {
-    
+    const productsCount = await Product.countDocuments();
+const resultPerPage = 10; // Adjust as per your pagination logic
+
 
     const searchFeature = new SearchFeatures(Product.find(), req.query)
       .search()

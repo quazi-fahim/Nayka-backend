@@ -34,7 +34,7 @@ router.post("/register", async (req, res) => {
 });
 
 // Login
-router.post("/signin", async (req, res) => {
+router.post("/login", async (req, res) => {
   console.log("Register endpoint hit");
   try {
     const { email, password } = req.body;
