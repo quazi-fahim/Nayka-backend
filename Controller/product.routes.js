@@ -10,8 +10,7 @@ const SearchFeatures = require("../utils/utils");
 //get all product for all 
 router.get("/", async (req, res) => {
   try {
-    const resultPerPage = 12;
-    const productsCount = await Product.countDocuments();
+    
 
     const searchFeature = new SearchFeatures(Product.find(), req.query)
       .search()
@@ -20,7 +19,7 @@ router.get("/", async (req, res) => {
     let products = await searchFeature.query;
     let filteredProductsCount = products.length;
 
-    searchFeature.pagination(resultPerPage);
+    
     products = await searchFeature.query.clone();
 
     res.status(200).json({
@@ -34,6 +33,15 @@ router.get("/", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+//get all product
+router.get("/all", async (_, res) => {
+  try {
+      const product = await Product.find();
+      res.json(product)
+  } catch (err) {
+      res.status(500).json({ message: err.message })
+  }
+})
 
 //get product details
 
