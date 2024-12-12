@@ -15,7 +15,7 @@ app.use(cors({
 
 
 app.use(express.json());
-app.use(logger);
+
 app.use("/users",userRouter);
 app.use("/products",ProductRouter);
 app.use("/cart",Cart)
